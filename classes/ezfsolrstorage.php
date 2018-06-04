@@ -29,11 +29,6 @@ class ezfSolrStorage
 
     /* var $handler; */
 
-    function  __construct( )
-    {
-
-    }
-
     /**
      * @param eZContentObjectAttribute $contentObjectAttribute the attribute to serialize
      * @return array for further processing
@@ -100,4 +95,3 @@ class ezfSolrStorage
     }
 }
 
-?>

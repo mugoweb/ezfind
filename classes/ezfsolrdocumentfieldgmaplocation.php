@@ -107,4 +107,4 @@ class ezfSolrDocumentFieldGmapLocation extends ezfSolrDocumentFieldBase
         }
     }
 }
-?>
+

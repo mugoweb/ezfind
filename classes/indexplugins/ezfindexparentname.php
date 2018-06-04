@@ -45,4 +45,3 @@ class ezfIndexParentName implements ezfIndexPlugin
     }
 }
 
-?>

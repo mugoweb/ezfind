@@ -26,4 +26,3 @@ class ezkeywordSolrStorage extends ezdatatypeSolrStorage
     }
 }
 
-?>

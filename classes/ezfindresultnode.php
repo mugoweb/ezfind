@@ -10,7 +10,7 @@ class eZFindResultNode extends eZContentObjectTreeNode
     /*!
      \reimp
     */
-    function eZFindResultNode( $rows = array() )
+    public function __construct( $rows = array() )
     {
         parent::__construct( $rows );
         if ( isset( $rows['id'] ) )
@@ -131,4 +131,3 @@ class eZFindResultNode extends eZContentObjectTreeNode
     var $ResultObject;
 }
 
-?>

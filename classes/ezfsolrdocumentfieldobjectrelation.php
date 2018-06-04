@@ -357,4 +357,3 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
     }
 }
 
-?>

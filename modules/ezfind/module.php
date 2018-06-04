@@ -53,4 +53,4 @@ $ViewList[ 'query' ] = array(
 $FunctionList = array();
 $FunctionList['elevate'] = array();
 $FunctionList['query_admin'] = array();
-?>
+

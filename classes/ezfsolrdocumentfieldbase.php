@@ -555,4 +555,3 @@ class ezfSolrDocumentFieldBase
     const SUBATTR_FIELD_SEPARATOR = '___';
 }
 
-?>

@@ -24,4 +24,3 @@ interface ezfIndexPlugin
     public function modify( eZContentObject $contentObject, &$docList );
 }
 
-?>

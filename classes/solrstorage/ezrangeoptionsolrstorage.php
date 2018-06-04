@@ -33,4 +33,3 @@ class ezrangeoptionSolrStorage extends ezdatatypeSolrStorage
     }
 }
 
-?>

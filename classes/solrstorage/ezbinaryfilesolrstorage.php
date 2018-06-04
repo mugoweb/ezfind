@@ -59,5 +59,3 @@ class ezbinaryfileSolrStorage extends ezdatatypeSolrStorage
 
 }
 
-
-?>

@@ -32,4 +32,3 @@ class ezpriceSolrStorage extends ezdatatypeSolrStorage
     }
 }
 
-?>

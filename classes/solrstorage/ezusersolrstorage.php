@@ -31,4 +31,3 @@ class ezuserSolrStorage extends ezdatatypeSolrStorage
     }
 }
 
-?>

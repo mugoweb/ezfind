@@ -24,7 +24,7 @@ class ezfSearchResultInfo
      *           'Engine' => 'engine name',
      *           ... )
      */
-    function ezfSearchResultInfo( array $resultArray )
+    public function _construct( array $resultArray )
     {
         $this->ResultArray = $resultArray;
     }
@@ -366,4 +366,3 @@ class ezfSearchResultInfo
     protected $ResultArray;
 }
 
-?>

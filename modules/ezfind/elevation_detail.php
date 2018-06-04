@@ -116,4 +116,4 @@ if ( $object instanceof eZContentObject )
 }
 
 $Result['left_menu'] = "design:ezfind/backoffice_left_menu.tpl";
-?>
+

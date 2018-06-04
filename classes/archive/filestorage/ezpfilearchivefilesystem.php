@@ -76,5 +76,3 @@ class ezpFileArchiveFileSystem extends ezpFileArchive
     }
 
 }
-
-?>
