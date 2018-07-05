@@ -16,7 +16,13 @@ class ezfTemplateOperators
 
     public function operatorList()
     {
-        return array( 'solr_escape', 'solr_quotes_escape' );
+        return array(
+            'solr_escape',
+            'solr_quotes_escape',
+            'solr_realescape',
+            'solr_date',
+            'solr_local_time',
+        );
     }
 
     public function namedParameterPerOperator()
@@ -27,12 +33,15 @@ class ezfTemplateOperators
     public function namedParameterList()
     {
         return array(
-            'solr_escape'        => array(),
+            'solr_escape' => array(),
+            'solr_date' => array(),
+            'solr_local_time' => array(),
+            'solr_realescape' => array(),
             'solr_quotes_escape' => array(
                 'leave_edge_quotes' => array(
-                    'type'        => 'boolean',
-                    'required'    => false,
-                    'default'     => false
+                    'type' => 'boolean',
+                    'required' => false,
+                    'default' => false
                 )
             ),
         );
@@ -40,14 +49,26 @@ class ezfTemplateOperators
 
     public function modify( $tpl, $operatorName, $operatorParameters, $rootNamespace, $currentNamespace, &$operatorValue, $namedParameters )
     {
-        switch ( $operatorName )
+        switch( $operatorName )
         {
             case 'solr_escape':
                 $operatorValue = $this->escapeQuery( $operatorValue );
                 break;
 
+            case 'solr_realescape':
+                $operatorValue = $this->realEscapeString( $operatorValue );
+                break;
+
+            case 'solr_date':
+                $operatorValue = $this->solrDate( $operatorValue );
+                break;
+
+            case 'solr_local_time':
+                $operatorValue = $this->solrLocalTime( $operatorValue );
+                break;
+
             case 'solr_quotes_escape':
-                $operatorValue = $this->escapeQuotes( $operatorValue, (bool)$namedParameters['leave_edge_quotes'] );
+                $operatorValue = $this->escapeQuotes( $operatorValue, (bool)$namedParameters[ 'leave_edge_quotes' ] );
                 break;
         }
     }
@@ -64,12 +85,66 @@ class ezfTemplateOperators
      */
     public function escapeQuery( $query )
     {
-        if ( $query[0] === '"' && $query[strlen( $query ) -1] === '"' )
+        if( $query[ 0 ] === '"' && $query[ strlen( $query ) - 1 ] === '"' )
         {
             $query = substr( $query, 1, -1 );
         }
 
         return '"' . $this->escapeQuotes( $query ) . '"';
+    }
+
+    public function solrDate( $string )
+    {
+        return ezfSolrDocumentFieldBase::convertTimestampToDate( $string );
+    }
+
+    public function solrLocalTime( $string )
+    {
+        $return = false;
+
+        $utc_date = DateTime::createFromFormat(
+            'Y-m-d?H:i:s?',
+            $string,
+            new DateTimeZone( 'UTC' )
+        );
+
+        if( $utc_date )
+        {
+            $local_date = $utc_date;
+            $local_date->setTimeZone(new DateTimeZone( 'America/New_York' ) );
+
+            $return = $local_date->getTimestamp();
+        }
+
+        return $return;
+    }
+
+    public function realEscapeString( $string )
+    {
+        $map = array(
+            ' ' => '\\ ',
+            '+' => '\\+',
+            '-' => '\\-',
+            '&&' => '\\&&',
+            '||' => '\\||',
+            '!' => '\\!',
+            '(' => '\\(',
+            ')' => '\\)',
+            '{' => '\\{',
+            '}' => '\\}',
+            '[' => '\\[',
+            ']' => '\\]',
+            '^' => '\\^',
+            '"' => '\\""',
+            '~' => '\\~',
+            '*' => '\\*',
+            '?' => '\\?',
+            ':' => '\\:',
+            '\\' => '\\\\',
+            '/' => '\\/', // cannot start with forward slash
+        );
+
+        return str_replace( array_keys( $map ), array_values($map ), $string );
     }
 
     /**
