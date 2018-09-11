@@ -158,4 +158,4 @@ class ezfSolrDocumentFieldDummyExample extends ezfSolrDocumentFieldBase
         }
     }
 }
-?>
+

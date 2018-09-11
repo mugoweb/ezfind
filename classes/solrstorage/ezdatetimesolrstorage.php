@@ -27,4 +27,3 @@ class ezdatetimeSolrStorage extends ezdatatypeSolrStorage
     }
 }
 
-?>

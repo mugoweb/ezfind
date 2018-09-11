@@ -12,13 +12,6 @@
 class ezfModuleFunctionCollection
 {
     /**
-     * Constructor
-     */
-    function ezfModuleFunctionCollection()
-    {
-    }
-
-    /**
      * Get HTTP get facet parameters
      *
      * @return array HTTP GET facet parameters, as described in the facets
@@ -327,4 +320,4 @@ class ezfModuleFunctionCollection
         return array( 'result' => $facets );
     }
 }
-?>
+

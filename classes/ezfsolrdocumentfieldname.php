@@ -13,13 +13,6 @@
 class ezfSolrDocumentFieldName
 {
     /**
-     *Constructor
-     */
-    function __construct()
-    {
-    }
-
-    /**
      * Lookup Solr schema field name. The lookup requires base name and
      * field type to generate the correct field name.
      *
@@ -143,4 +136,3 @@ class ezfSolrDocumentFieldName
     const LOOKUP_FILEDIR = 'ezfind';
 }
 
-?>

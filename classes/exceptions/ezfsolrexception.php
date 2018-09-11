@@ -27,4 +27,4 @@ class ezfSolrException extends ezfBaseException
         parent::__construct( $message );
     }
 }
-?>
+

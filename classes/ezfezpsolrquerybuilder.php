@@ -14,7 +14,7 @@ class ezfeZPSolrQueryBuilder
      * @param Object $searchPluginInstance Search engine instance. Allows the query builder to
      *        communicate with the caller ( eZSolr instance ).
      */
-    function ezfeZPSolrQueryBuilder( $searchPluginInstance )
+    public function __construct( $searchPluginInstance )
     {
         $this->searchPluginInstance = $searchPluginInstance;
     }
@@ -1904,4 +1904,3 @@ class ezfeZPSolrQueryBuilder
     const FACET_MINCOUNT = 1;
 }
 
-?>

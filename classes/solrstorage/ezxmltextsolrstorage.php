@@ -42,4 +42,3 @@ class ezxmltextSolrStorage extends ezdatatypeSolrStorage
 }
 
 
-?>

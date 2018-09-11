@@ -18,17 +18,6 @@ class ezfSolrUtils
 
     /**
      *
-     */
-
-
-    /*function  __construct( )
-    {
-
-    }*/
-
-
-    /**
-     *
      * @param eZSolrBase $fromCore
      * @param eZSolrBase $toCore
      * @param string $keyField
@@ -200,5 +189,3 @@ class ezfSolrUtils
 
 }
 
-
-?>

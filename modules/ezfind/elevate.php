@@ -219,4 +219,4 @@ $Result['path'] = array( array( 'url' => false,
                          array( 'url' => false,
                                 'text' => ezpI18n::tr( 'extension/ezfind', 'Elevation' ) ) );
 
-?>
+

@@ -29,6 +29,3 @@ abstract class ezpFileArchive
 
 }
 
-
-
-?>

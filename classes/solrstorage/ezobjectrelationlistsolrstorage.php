@@ -33,4 +33,3 @@ class ezobjectrelationlistSolrStorage extends ezdatatypeSolrStorage
     }
 }
 
-?>

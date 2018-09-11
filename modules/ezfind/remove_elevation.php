@@ -88,4 +88,4 @@ $Result['path'] = array( array( 'url' => false,
                                 'text' => ezpI18n::tr( 'extension/ezfind', 'eZFind' ) ),
                          array( 'url' => false,
                                 'text' => ezpI18n::tr( 'extension/ezfind', 'Remove Elevation' ) ) );
-?>
+
