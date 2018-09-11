@@ -11,5 +11,11 @@ $eZTemplateOperatorArray = array();
 
 $eZTemplateOperatorArray[] = array(
     'class' => 'ezfTemplateOperators',
-    'operator_names' => array( 'solr_escape', 'solr_quotes_escape' )
+    'operator_names' => array(
+		'solr_escape',
+		'solr_quotes_escape',
+		'solr_realescape',
+		'solr_date',
+		'solr_local_time',
+	)
 );
