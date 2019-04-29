@@ -18,15 +18,18 @@ class eZFindResultNode extends eZContentObjectTreeNode
             $this->ContentObjectID = $rows['id'];
         }
         $this->LocalAttributeValueList = array();
-        $this->LocalAttributeNameList = array( 'is_local_installation',
-                                               'name',
-                                               'global_url_alias',
-                                               'published',
-                                               'language_code',
-                                               'highlight',
-                                               'score_percent',
-                                               'elevated'
-                );
+        $this->LocalAttributeNameList = array(
+            'is_local_installation',
+            'name',
+            'global_url_alias',
+            'published',
+            'language_code', // should not be here
+            'highlight',
+            'score_percent',
+            'elevated',
+            'global_id',
+            'doc',
+        );
     }
 
     /*!
@@ -36,45 +39,70 @@ class eZFindResultNode extends eZContentObjectTreeNode
     {
         $retVal = null;
 
-        switch ( $attr )
+        // SOLR specific attributes
+        if( in_array( $attr, $this->LocalAttributeNameList ) )
         {
-            case 'object':
+            // Extra effort for language code - keeping BC
+            if( $attr == 'language_code' )
             {
                 if ( $this->attribute( 'is_local_installation' ) )
                 {
-                    $retVal = eZContentObjectTreeNode::attribute( $attr, $noFunction );
+                    $eZObj = parent::attribute( 'object' );
+                    $retVal = $eZObj->attribute( 'current_language' );
                 }
                 else
                 {
-                    if ( empty( $this->ResultObject ) )
-                    {
-                        $this->ResultObject = new eZFindResultObject( array( 'published' => $this->attribute( 'published' ) ) );
-                    }
-                    $retVal = $this->ResultObject;
+                    $retVal = $this->CurrentLanguage;
                 }
-            } break;
-
-            case 'language_code':
+            }
+            else
             {
-                $retVal = $this->CurrentLanguage;
-            } break;
-
-            default:
+                $retVal = isset( $this->LocalAttributeValueList[ $attr ] ) ? $this->LocalAttributeValueList[$attr] : null;
+                // Timestamps are stored as strings for remote objects, so it must be converted.
+                if ( $attr == 'published' )
+                {
+                    $retVal = strtotime( $retVal );
+                }
+            }
+        }
+        else
+        {
+            if ( $this->attribute( 'is_local_installation' ) )
             {
-                if ( in_array( $attr, $this->LocalAttributeNameList ) )
+                $retVal = eZContentObjectTreeNode::attribute( $attr, $noFunction );
+            }
+            else
+            {
+                switch ( $attr )
                 {
-                    $retVal = isset( $this->LocalAttributeValueList[$attr] ) ? $this->LocalAttributeValueList[$attr] : null;
-                    // Timestamps are stored as strings for remote objects, so it must be converted.
-                    if ( $attr == 'published' )
+                    case 'object':
                     {
-                        $retVal = strtotime( $retVal );
-                    }
+                        if ( empty( $this->ResultObject ) )
+                        {
+                            $objectRow = array(
+                                'doc' => &$this->LocalAttributeValueList[ 'doc' ]
+                            );
+                            $this->ResultObject = new eZFindResultObject( $objectRow );
+                        }
+
+                        $retVal = $this->ResultObject;
+                    } break;
+
+                    case 'class_identifier':
+                    case 'contentclass_id':
+                    case 'state_id_array':
+                    {
+                        /** @var eZFindResultObject $resultObject */
+                        $resultObject = $this->attribute( 'object' );
+                        $retVal = $resultObject->attribute( $attr );
+                    } break;
+
+                    case 'url_alias':
+                    {
+                        $retVal = $this->LocalAttributeValueList[ 'doc' ][ 'meta_main_url_alias_ms' ];
+                    } break;
                 }
-                else if ( $this->attribute( 'is_local_installation' ) )
-                {
-                    $retVal = eZContentObjectTreeNode::attribute( $attr, $noFunction );
-                }
-            } break;
+            }
         }
 
         return $retVal;
