@@ -13,7 +13,7 @@ class eZFindResultObject extends eZContentObject
     function __construct( $rows = array() )
     {
         $this->LocalAttributeValueList = array();
-		$this->LocalAttributeNameList = array( 'doc' );
+        $this->LocalAttributeNameList = array( 'doc' );
 
         foreach ( $rows as $name => $value )
         {

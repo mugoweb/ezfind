@@ -27,7 +27,6 @@ class eZFindResultNode extends eZContentObjectTreeNode
             'highlight',
             'score_percent',
             'elevated',
-            'global_id',
             'doc',
         );
     }

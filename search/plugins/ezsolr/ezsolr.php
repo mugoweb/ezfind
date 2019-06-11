@@ -1767,6 +1767,7 @@ class eZSolr implements ezpSearchEngine
                 }
 
                 $resultTree->setAttribute( 'name', $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'name' )] );
+                $resultTree->setAttribute( 'doc', $doc );
                 $resultTree->setAttribute( 'published', $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'published' )] );
                 $resultTree->setAttribute( 'global_url_alias', $globalURL );
                 $resultTree->setAttribute( 'highlight', isset( $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] ) ?
