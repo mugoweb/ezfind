@@ -13,7 +13,7 @@ class eZFindResultObject extends eZContentObject
     function __construct( $rows = array() )
     {
         $this->LocalAttributeValueList = array();
-        $this->LocalAttributeNameList = array( 'published' );
+        $this->LocalAttributeNameList = array( 'doc' );
 
         foreach ( $rows as $name => $value )
         {
@@ -26,8 +26,35 @@ class eZFindResultObject extends eZContentObject
     */
     function attribute( $attr, $noFunction = false )
     {
-        return isset( $this->LocalAttributeValueList[$attr] ) ?
-                $this->LocalAttributeValueList[$attr] : null;
+        $returnVal = null;
+
+        if( isset( $this->LocalAttributeValueList[ $attr ] ) )
+        {
+            $returnVal = $this->LocalAttributeValueList[ $attr ];
+        }
+        else
+        {
+            switch( $attr )
+            {
+                case 'published':
+                {
+                    $returnVal = strtotime( $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( 'published' ) ] );
+                } break;
+
+                case 'state_id_array':
+                {
+                    $returnVal = $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( 'object_states' ) ];
+                } break;
+
+                case 'contentclass_id':
+                case 'class_identifier':
+                {
+                    $returnVal = $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( $attr ) ];
+                } break;
+            }
+        }
+
+        return $returnVal;
     }
 
     /*!
