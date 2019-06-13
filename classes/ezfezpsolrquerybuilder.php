@@ -445,28 +445,7 @@ class ezfeZPSolrQueryBuilder
         // Document transformer fields since eZ Find 5.4
         $docTransformerFields = array( '[elevated]' );
 
-        $fieldsToReturnString = eZSolr::getMetaFieldName( 'guid' ) . ' ' . eZSolr::getMetaFieldName( 'installation_id' ) . ' ' .
-                eZSolr::getMetaFieldName( 'main_url_alias' ) . ' ' . eZSolr::getMetaFieldName( 'installation_url' ) . ' ' .
-                eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
-                eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
-                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ) . ' ' .
-                eZSolr::getMetaFieldName( 'main_path_string' ) . ' ' . eZSolr::getMetaFieldName( 'is_invisible' ) . ' ' .
-                implode( ' ', $docTransformerFields) . ' ' .
-                implode( ' ', $extraFieldsToReturn );
-
-        if ( ! $asObjects )
-        {
-            if ( empty( $fieldsToReturn ))
-            {
-                // @todo: needs to be refined with Solr supporting globbing in fl argument, otherwise requests will be to heavy for large fields as for example binary file content
-                $fieldsToReturnString = 'score, *';
-            }
-            else
-            {
-                $fieldsToReturnString .= ' ' . implode( ' ', $fieldsToReturn);
-            }
-
-        }
+        $fieldsToReturnString = $this->getFieldList( $asObjects, $fieldsToReturn, $docTransformerFields, $extraFieldsToReturn );
 
         $searchResultClusterParamList = array( 'clustering' => 'true');
         $searchResultClusterParamList = $this->buildSearchResultClusterQuery($searchResultClusterParams);
@@ -640,9 +619,9 @@ class ezfeZPSolrQueryBuilder
         }
         switch ( $handlerParameters['qt'] )
         {
-        	case 'ezpublish' :
-        	{
-        	// The edismax based handler which takes its own boost parameters
+            case 'ezpublish' :
+            {
+            // The edismax based handler which takes its own boost parameters
                 // Push the boost expression in the 'bf' parameter, if it is not empty.
                 //
                 // for the fields to boost, modify the qf parameter for edismax
@@ -684,18 +663,18 @@ class ezfeZPSolrQueryBuilder
                 }
 
                 return $boostReturnArray;
-        	} break;
+            } break;
 
-        	default:
-        	{
-        	    // Simplestandard or standard search handlers.
-        	    // Append the boost expression to the 'q' parameter.
-        	    // Alter the $handlerParameters array ( passed as reference )
-        	    // @TODO : Handle query-time field boosting through the buildMultiFieldQuery() method.
-        	    //         Requires a modified 'heuristic' mode.
-        	    $boostString = implode( ' ', $processedBoostFunctions['functions'] );
+            default:
+            {
+                // Simplestandard or standard search handlers.
+                // Append the boost expression to the 'q' parameter.
+                // Alter the $handlerParameters array ( passed as reference )
+                // @TODO : Handle query-time field boosting through the buildMultiFieldQuery() method.
+                //         Requires a modified 'heuristic' mode.
+                $boostString = implode( ' ', $processedBoostFunctions['functions'] );
                 $handlerParameters['q'] .= ' _val_:' . trim( $boostString );
-        	} break;
+            } break;
         }
         return array();
     }
@@ -855,18 +834,74 @@ class ezfeZPSolrQueryBuilder
                 'mlt.boost' => $boostmlt, // boost the highest ranking terms
                 //'mlt.qf' => implode( ' ', $queryFields ),
                 'mlt.fl' => implode( ' ', $queryFields ),
-                'fl' =>
-                eZSolr::getMetaFieldName( 'guid' ) . ' ' . eZSolr::getMetaFieldName( 'installation_id' ) . ' ' .
-                eZSolr::getMetaFieldName( 'main_url_alias' ) . ' ' . eZSolr::getMetaFieldName( 'installation_url' ) . ' ' .
-                eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
-                eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
-                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' .
-                eZSolr::getMetaFieldName( 'path_string' ) . ' ' . eZSolr::getMetaFieldName( 'is_invisible' ),
+                'fl' => $this->getFieldList( true ),
                 'fq' => $filterQuery,
                 'wt' => 'php' ),
             $facetQueryParamList );
 
         return $queryParams;
+    }
+
+    /**
+     * @param bool $asObjects
+     * @param null $fieldsToReturn
+     * @param null $docTransformerFields
+     * @param null $extraFieldsToReturn
+     * @return string
+     */
+    protected function getFieldList(
+        $asObjects = true,
+        $fieldsToReturn = null,
+        $docTransformerFields = null,
+        $extraFieldsToReturn = null
+    )
+    {
+        $return = '';
+
+        if( $asObjects )
+        {
+            $fields = array(
+                eZSolr::getMetaFieldName( 'guid' ),
+                eZSolr::getMetaFieldName( 'installation_id' ),
+                eZSolr::getMetaFieldName( 'main_url_alias' ),
+                eZSolr::getMetaFieldName( 'installation_url' ),
+                eZSolr::getMetaFieldName( 'id' ),
+                eZSolr::getMetaFieldName( 'main_node_id' ),
+                eZSolr::getMetaFieldName( 'language_code' ),
+                eZSolr::getMetaFieldName( 'name' ),
+                eZSolr::getMetaFieldName( 'published' ),
+                eZSolr::getMetaFieldName( 'path_string' ),
+                eZSolr::getMetaFieldName( 'main_path_string' ),
+                eZSolr::getMetaFieldName( 'is_invisible' ),
+                'score',
+            );
+
+            if( !empty( $docTransformerFields ) )
+            {
+                $fields += $docTransformerFields;
+            }
+
+            if( !empty( $extraFieldsToReturn ) )
+            {
+                $fields += $extraFieldsToReturn;
+            }
+
+            $return = implode( ' ', $fields );
+        }
+        else
+        {
+            if ( empty( $fieldsToReturn ))
+            {
+                // @todo: needs to be refined with Solr supporting globbing in fl argument, otherwise requests will be to heavy for large fields as for example binary file content
+                $return = 'score, *';
+            }
+            else
+            {
+                $return .= ' ' . implode( ' ', $fieldsToReturn );
+            }
+        }
+
+        return $return;
     }
 
     /**
@@ -1484,7 +1519,7 @@ class ezfeZPSolrQueryBuilder
      */
     protected function getContentClassFilterQuery( $contentClassIdent )
     {
-		if ( empty( $contentClassIdent ) )
+        if ( empty( $contentClassIdent ) )
         {
             return null;
         }
@@ -1510,10 +1545,10 @@ class ezfeZPSolrQueryBuilder
                         $classQueryParts[] = eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $class->attribute( 'id' );
                     }
                 }
-            	else
-				{
-					eZDebug::writeError( "Unknown class_id filtering parameter: $classID", __METHOD__ );
-				}
+                else
+                {
+                    eZDebug::writeError( "Unknown class_id filtering parameter: $classID", __METHOD__ );
+                }
             }
 
             return implode( ' OR ', $classQueryParts );
