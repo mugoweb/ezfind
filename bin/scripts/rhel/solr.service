@@ -1,0 +1,46 @@
+# eZ Find systemd service for RHEL and CENTOS.
+#
+# Update the service configuration
+# ================================
+# Replace <ezpublish_legacy_root> with your installation path
+# and update the other service setting as required.
+#
+# Enable the service on boot using the target file path
+# =====================================================
+# cd /<ezpublish_legacy_root>/extension/ezfind/bin/scripts/rhel
+# sudo systemctl enable solr.service
+#
+# Note: Enabling the service with the file in a /mnt location does not work as it will fail to come back up after reboot.
+# For those configurations, copy the service file to the system location, then enable it.
+#
+# cd /<ezpublish_legacy_root>/extension/ezfind/bin/scripts/rhel
+# sudo cp solr.service /etc/systemd/system/
+# sudo systemctl enable /etc/systemd/system/solr.service
+#
+# Make systemd load the new unit
+# ==============================
+# sudo systemctl daemon-reload
+#
+# Commands
+# ========
+# sudo systemctl start solr.service
+# sudo systemctl restart solr.service
+# sudo systemctl status solr.service
+# sudo journald -xe
+
+
+[Unit]
+Description=Apache SOLR
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+WorkingDirectory=/<ezpublish_legacy_root>/extension/ezfind/java/
+PIDFile=/var/run/solr.pid
+ExecStart=/usr/bin/java -Dezfind -server -d64 -Xmx300m -Xms300m -XX:+UseParallelGC -XX:NewRatio=5 -jar start.jar
+User=root
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s QUIT $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
