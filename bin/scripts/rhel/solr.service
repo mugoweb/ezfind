@@ -27,7 +27,11 @@
 # sudo systemctl restart solr.service
 # sudo systemctl status solr.service
 # sudo journald -xe
-
+#
+# Info
+# ====
+# The flag "Xmx" specifies the maximum memory allocation pool for a Java virtual machine (JVM).
+# The flag "Xms" specifies the initial memory allocation pool.
 
 [Unit]
 Description=Apache SOLR
