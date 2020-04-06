@@ -38,6 +38,10 @@ Description=Apache SOLR
 After=syslog.target network.target remote-fs.target nss-lookup.target
 
 [Service]
+# suppress output to stdout as it floods /var/log/messages with 
+# Solr messages that are already logged in ezfind's solr.log
+StandardOutput=null
+#StandardError=null
 WorkingDirectory=/<ezpublish_legacy_root>/extension/ezfind/java/
 PIDFile=/var/run/solr.pid
 ExecStart=/usr/bin/java -Dezfind -server -d64 -Xmx300m -Xms300m -XX:+UseParallelGC -XX:NewRatio=5 -jar start.jar
