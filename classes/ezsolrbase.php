@@ -93,7 +93,7 @@ class eZSolrBase
 
      \return POST part of HTML request
      */
-	function buildPostString( $queryParams )
+    function buildPostString( $queryParams )
     {
         foreach ( $queryParams as $name => $value )
         {
@@ -157,7 +157,7 @@ class eZSolrBase
         {
             return false;
         }
-		$params['wt'] = $wt;
+        $params['wt'] = $wt;
         $paramsAsString = $this->buildPostString( $params );
         $data = $this->postQuery( $request, $paramsAsString );
         $resultArray = array();
