@@ -6,16 +6,16 @@
  *
  * Usage :
  * fetch( 'ezfind', 'search', hash(
- * 	   'extended_attribute_filter', array(
- * 		   hash(
+ *        'extended_attribute_filter', array(
+ *            hash(
  *             'id', 'geodist',
  *             'params', hash(
  *                 'field', 'article/location',
  *                 'latitude', '46.75984',
  *                 'longitude', '1.738281'
  *             )
- * 	       )
- * 	   )
+ *            )
+ *        )
  * ))
  *
  * Filter parameters :

@@ -210,10 +210,10 @@
                           {def $activeFacetsCount=sum( $key, 1 )}
                           {def $suffix=$uriSuffix|explode( concat( '&filter[]=', $facetData.fieldList[$key2], ':"', $key2|solr_quotes_escape, '"' ) )|implode( '' )|explode( concat( '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName ) )|implode( '' )}
                           <li>
-	                          <a class="btn btn-mini" href={concat( $baseURI, $suffix )|ezurl} title="{'Remove filter on '|i18n( 'design/ezwebin/content/search' )}'{$facetName|trim('"')|wash}'">
-	                            <span class="remover">&times</span> 
-	                            <span><strong>{$defaultFacet['name']}</strong>&nbsp;{$facetName|trim('"')|wash}</span>
-	                          </a>
+                              <a class="btn btn-mini" href={concat( $baseURI, $suffix )|ezurl} title="{'Remove filter on '|i18n( 'design/ezwebin/content/search' )}'{$facetName|trim('"')|wash}'">
+                                <span class="remover">&times</span>
+                                <span><strong>{$defaultFacet['name']}</strong>&nbsp;{$facetName|trim('"')|wash}</span>
+                              </a>
                           </li>
                       {/if}
                   {/foreach}
