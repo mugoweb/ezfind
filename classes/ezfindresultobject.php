@@ -13,7 +13,10 @@ class eZFindResultObject extends eZContentObject
     function __construct( $rows = array() )
     {
         $this->LocalAttributeValueList = array();
-        $this->LocalAttributeNameList = array( 'doc' );
+        $this->LocalAttributeNameList = array(
+            'doc',
+            'is_local_installation'
+        );
 
         foreach ( $rows as $name => $value )
         {
@@ -34,23 +37,43 @@ class eZFindResultObject extends eZContentObject
         }
         else
         {
-            switch( $attr )
+            if ( $this->attribute( 'is_local_installation' ) )
             {
-                case 'published':
+                $returnVal = eZContentObjectTreeNode::attribute( $attr, $noFunction );
+            }
+            else
+            {
+                switch( $attr )
                 {
-                    $returnVal = strtotime( $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( 'published' ) ] );
-                } break;
+                    case 'published':
+                    {
+                        $returnVal = strtotime( $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( 'published' ) ] );
+                    }
+                    break;
 
-                case 'state_id_array':
-                {
-                    $returnVal = $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( 'object_states' ) ];
-                } break;
+                    case 'modified':
+                    {
+                        $returnVal = strtotime( $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( 'modified' ) ] );
+                    }
+                    break;
 
-                case 'contentclass_id':
-                case 'class_identifier':
-                {
-                    $returnVal = $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( $attr ) ];
-                } break;
+                    case 'state_id_array':
+                    {
+                        $returnVal = $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( 'object_states' ) ];
+                    }
+                    break;
+
+                    case 'contentclass_id':
+                    case 'class_identifier':
+                    case 'class_name':
+                    case 'main_node_id':
+                    case 'id':
+                    case 'remote_id':
+                    {
+                        $returnVal = $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( $attr ) ];
+                    }
+                    break;
+                }
             }
         }
 
