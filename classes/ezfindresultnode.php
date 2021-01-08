@@ -13,13 +13,17 @@ class eZFindResultNode extends eZContentObjectTreeNode
     public function __construct( $rows = array() )
     {
         parent::__construct( $rows );
+
+        //confusing to send an id which is the object ID
         if ( isset( $rows['id'] ) )
         {
             $this->ContentObjectID = $rows['id'];
         }
+
         $this->LocalAttributeValueList = array();
         $this->LocalAttributeNameList = array(
             'is_local_installation',
+            'installation_id',
             'name',
             'global_url_alias',
             'published',
@@ -56,11 +60,26 @@ class eZFindResultNode extends eZContentObjectTreeNode
             }
             else
             {
-                $retVal = isset( $this->LocalAttributeValueList[ $attr ] ) ? $this->LocalAttributeValueList[$attr] : null;
-                // Timestamps are stored as strings for remote objects, so it must be converted.
-                if ( $attr == 'published' )
+                switch( $attr )
                 {
-                    $retVal = strtotime( $retVal );
+                    case 'installation_id':
+                    {
+                        $retVal = $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( $attr ) ];
+                    }
+                    break;
+
+                    // Timestamps are stored as human friendly string for remote objects, so it must be converted.
+                    // It is better to fetch 'published' from the object
+                    case 'published':
+                    {
+                        $retVal = strtotime( $this->LocalAttributeValueList[ $attr ] );
+                    }
+                    break;
+
+                    default:
+                    {
+                        $retVal = isset( $this->LocalAttributeValueList[ $attr ] ) ? $this->LocalAttributeValueList[$attr] : null;
+                    }
                 }
             }
         }
@@ -79,7 +98,8 @@ class eZFindResultNode extends eZContentObjectTreeNode
                         if ( empty( $this->ResultObject ) )
                         {
                             $objectRow = array(
-                                'doc' => &$this->LocalAttributeValueList[ 'doc' ]
+                                'doc' => &$this->LocalAttributeValueList[ 'doc' ],
+                                'is_local_installation' => $this->attribute( 'is_local_installation' )
                             );
                             $this->ResultObject = new eZFindResultObject( $objectRow );
                         }
@@ -98,7 +118,7 @@ class eZFindResultNode extends eZContentObjectTreeNode
 
                     case 'url_alias':
                     {
-                        $retVal = $this->LocalAttributeValueList[ 'doc' ][ 'meta_main_url_alias_ms' ];
+                        $retVal = $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( $attr ) ];
                     } break;
                 }
             }

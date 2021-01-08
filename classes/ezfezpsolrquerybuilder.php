@@ -445,15 +445,33 @@ class ezfeZPSolrQueryBuilder
         // Document transformer fields since eZ Find 5.4
         $docTransformerFields = array( '[elevated]' );
 
-        $fieldsToReturnString = eZSolr::getMetaFieldName( 'guid' ) . ' ' . eZSolr::getMetaFieldName( 'installation_id' ) . ' ' .
-                eZSolr::getMetaFieldName( 'main_url_alias' ) . ' ' . eZSolr::getMetaFieldName( 'installation_url' ) . ' ' .
-                eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
-                eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
-                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ) . ' ' .
-                eZSolr::getMetaFieldName( 'main_path_string' ) . ' ' . eZSolr::getMetaFieldName( 'is_invisible' ) . ' ' .
-                implode( ' ', $docTransformerFields) . ' ' .
-                implode( ' ', $extraFieldsToReturn );
+        $defaultFields = [
+            'guid',
+            'installation_id',
+            'main_url_alias',
+            'installation_url',
+            'id',
+            'remote_id',
+            'main_node_id',
+            'language_code',
+            'name',
+            'published',
+            'modified',
+            'path_string',
+            'main_path_string',
+            'is_invisible',
+            'class_name',
+            'class_identifier',
+        ];
 
+        array_walk( $defaultFields, function(&$v){ $v = eZSolr::getMetaFieldName( $v ); } );
+
+        $fieldsToReturnString =
+            implode(' ', $defaultFields ) .
+            ' score ' .
+            implode( ' ', $docTransformerFields) . ' ' .
+            implode( ' ', $extraFieldsToReturn );
+        
         if ( ! $asObjects )
         {
             if ( empty( $fieldsToReturn ))
