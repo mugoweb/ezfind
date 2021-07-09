@@ -47,15 +47,10 @@ RETVAL=0
 d_start() {
     CURRENT_DIR=`pwd`
     cd "$SOLR_HOME"
-    daemon --check "$NAME" --pidfile "/var/run/$NAME.pid" nohup $JAVA -jar start.jar > /dev/null 2>&1 &
+    daemon --check "$NAME" --pidfile "/var/run/$NAME.pid" nohup $JAVA -D$NAME -jar start.jar > /dev/null 2>&1 &
     cd "$CURRENT_DIR"
     sleep 1 # Sleep 1 second, to make sure java is registered.
-    
-    # Using pidof is not good, as there might be other java processes as well.
-    # Replaced this by calling ps. Still, this is somewhat awkward.
-    # 2014-10-10 alex.schuster@ez.no
-    #pid=`pidof java`
-    pid=`ps ax | grep '[/]usr/bin/java -jar start.jar' | grep -v nohup | awk '{ print $1 }'`
+    pid=`ps ax | grep "java -D$NAME" | egrep -v '(nohup|grep)' | awk '{print $1}'`
     if [ -z $pid ]
     then
         echo "Error starting $NAME!"
