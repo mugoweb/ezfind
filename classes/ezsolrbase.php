@@ -93,7 +93,7 @@ class eZSolrBase
 
      \return POST part of HTML request
      */
-	function buildPostString( $queryParams )
+    function buildPostString( $queryParams )
     {
         foreach ( $queryParams as $name => $value )
         {
@@ -157,7 +157,7 @@ class eZSolrBase
         {
             return false;
         }
-		$params['wt'] = $wt;
+        $params['wt'] = $wt;
         $paramsAsString = $this->buildPostString( $params );
         $data = $this->postQuery( $request, $paramsAsString );
         $resultArray = array();
@@ -268,27 +268,24 @@ class eZSolrBase
             return false;
         }
 
-        $intElements = $dom->getElementsByTagName( 'int' );
-
-        if ( $intElements->length < 1 )
+        $xpath = new DOMXPath( $dom );
+        $statusNodes = $xpath->query( '//int[@name="status"]' );
+        if( $statusNodes->length )
+        {
+            if( $statusNodes->item(0)->nodeValue != '0' )
+            {
+                $errorMessage = $xpath->query( '//str[@name="msg"]' )->item(0)->nodeValue;
+                eZDebug::writeError( 'Solr: '. $errorMessage, 'eZ Find' );
+                return false;
+            }
+        }
+        else
         {
             eZDebug::writeError( 'Invalid response from Solr: '.$updateResult, 'eZ Find' );
             return false;
         }
 
-        foreach ( $intElements as $intNode )
-        {
-            foreach ( $intNode->attributes as $attribute )
-            {
-                if ( ( $attribute->name === 'name' ) and ( $attribute->value === 'status' ) )
-                {
-                    //Then we have found the correct node
-                    return ( $intNode->nodeValue === "0"  );
-                }
-            }
-        }
-        eZDebug::writeError( 'Invalid response from Solr: '.$updateResult, 'eZ Find' );
-        return false;
+        return true;
     }
 
     /**
