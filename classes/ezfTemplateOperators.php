@@ -98,14 +98,14 @@ class ezfTemplateOperators
         return ezfSolrDocumentFieldBase::convertTimestampToDate( $string );
     }
 
-	/**
-	 * Internally solr uses UTC dates. If you need that date in context of
-	 * eZ Publish, you need to translate it to the configured timezone. This
-	 * function is helping you with that.
-	 *
-	 * @param $string UTC date from solr
-	 * @return bool|int
-	 */
+    /**
+     * Internally solr uses UTC dates. If you need that date in context of
+     * eZ Publish, you need to translate it to the configured timezone. This
+     * function is helping you with that.
+     *
+     * @param $string UTC date from solr
+     * @return bool|int
+     */
     public function solrLocalTime( $string )
     {
         $return = false;

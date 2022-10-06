@@ -221,34 +221,34 @@ class ezfeZPSolrQueryBuilder
             $filterQuery[] = $policyLimitationFilterQuery;
         }
 
-		// Add time/date query filter
-    	if ( $dateFilter > 0 )
-		{
-    		switch ( $dateFilter )
-			{
-				// last day
-				case 1:
-					$searchTimestamp = strtotime( '-1 day' );
-				break;
-				// last week
-				case 2:
-					$searchTimestamp = strtotime( '-1 week' );
-					break;
-				// last month
-				case 3:
-					$searchTimestamp = strtotime( '-1 month' );
-					break;
-				// last three month
-				case 4:
-					$searchTimestamp = strtotime( '-3 month' );
-					break;
-				// last year
-				case 5:
-					$searchTimestamp = strtotime( '-1 year' );
-				break;
-			}
-			$filterQuery[] = eZSolr::getMetaFieldName( 'published' ) . ':[' . ezfSolrDocumentFieldBase::preProcessValue( $searchTimestamp, 'date' ) .'/DAY TO *]';
-		}
+        // Add time/date query filter
+        if ( $dateFilter > 0 )
+        {
+            switch ( $dateFilter )
+            {
+                // last day
+                case 1:
+                    $searchTimestamp = strtotime( '-1 day' );
+                break;
+                // last week
+                case 2:
+                    $searchTimestamp = strtotime( '-1 week' );
+                    break;
+                // last month
+                case 3:
+                    $searchTimestamp = strtotime( '-1 month' );
+                    break;
+                // last three month
+                case 4:
+                    $searchTimestamp = strtotime( '-3 month' );
+                    break;
+                // last year
+                case 5:
+                    $searchTimestamp = strtotime( '-1 year' );
+                break;
+            }
+            $filterQuery[] = eZSolr::getMetaFieldName( 'published' ) . ':[' . ezfSolrDocumentFieldBase::preProcessValue( $searchTimestamp, 'date' ) .'/DAY TO *]';
+        }
 
         if ( (!eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility ) && ( $eZFindIni->variable( 'SearchFilters', 'FilterHiddenFromDB' ) == 'enabled' ) )
         {
@@ -658,9 +658,9 @@ class ezfeZPSolrQueryBuilder
         }
         switch ( $handlerParameters['qt'] )
         {
-        	case 'ezpublish' :
-        	{
-        	// The edismax based handler which takes its own boost parameters
+            case 'ezpublish' :
+            {
+            // The edismax based handler which takes its own boost parameters
                 // Push the boost expression in the 'bf' parameter, if it is not empty.
                 //
                 // for the fields to boost, modify the qf parameter for edismax
@@ -702,18 +702,18 @@ class ezfeZPSolrQueryBuilder
                 }
 
                 return $boostReturnArray;
-        	} break;
+            } break;
 
-        	default:
-        	{
-        	    // Simplestandard or standard search handlers.
-        	    // Append the boost expression to the 'q' parameter.
-        	    // Alter the $handlerParameters array ( passed as reference )
-        	    // @TODO : Handle query-time field boosting through the buildMultiFieldQuery() method.
-        	    //         Requires a modified 'heuristic' mode.
-        	    $boostString = implode( ' ', $processedBoostFunctions['functions'] );
+            default:
+            {
+                // Simplestandard or standard search handlers.
+                // Append the boost expression to the 'q' parameter.
+                // Alter the $handlerParameters array ( passed as reference )
+                // @TODO : Handle query-time field boosting through the buildMultiFieldQuery() method.
+                //         Requires a modified 'heuristic' mode.
+                $boostString = implode( ' ', $processedBoostFunctions['functions'] );
                 $handlerParameters['q'] .= ' _val_:' . trim( $boostString );
-        	} break;
+            } break;
         }
         return array();
     }
@@ -1502,7 +1502,7 @@ class ezfeZPSolrQueryBuilder
      */
     protected function getContentClassFilterQuery( $contentClassIdent )
     {
-		if ( empty( $contentClassIdent ) )
+        if ( empty( $contentClassIdent ) )
         {
             return null;
         }
@@ -1528,10 +1528,10 @@ class ezfeZPSolrQueryBuilder
                         $classQueryParts[] = eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $class->attribute( 'id' );
                     }
                 }
-            	else
-				{
-					eZDebug::writeError( "Unknown class_id filtering parameter: $classID", __METHOD__ );
-				}
+                else
+                {
+                    eZDebug::writeError( "Unknown class_id filtering parameter: $classID", __METHOD__ );
+                }
             }
 
             return implode( ' OR ', $classQueryParts );
