@@ -91,6 +91,8 @@
         {'Synchronise Elevate configuration with Solr'|i18n( 'extension/ezfind/elevate' )}
         <div class="button-right">
             <input class="button" type="submit" name="ezfind-elevate-synchronise" value="{'Synchronise'|i18n( 'extension/ezfind/elevate' )}" title="{'Synchronise the Elevate configuration with Solr.'|i18n( 'extension/ezfind/elevate' )}"/>
+            or
+            <input class="button" type="submit" name="ezfind-elevate-download" value="{'Download'|i18n( 'extension/ezfind/elevate' )}" title="{'Download the Elevate configuration file.'|i18n( 'extension/ezfind/elevate' )}"/>
         </div>
     </div>
 

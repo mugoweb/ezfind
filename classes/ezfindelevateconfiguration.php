@@ -348,6 +348,15 @@ class eZFindElevateConfiguration extends eZPersistentObject
     }
 
     /**
+     * @return string
+     */
+    public static function getElevateConfiguration()
+    {
+        self::generateConfiguration();
+        return self::$configurationXML;
+    }
+
+    /**
      * Extracts the configuration stored in the DB and turns it into a Solr-compliant XML string.
      * Stores the result string in the local property $configurationXML
      *

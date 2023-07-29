@@ -203,6 +203,17 @@ else if ( $http->hasPostVariable( 'ezfind-elevate-synchronise' ) )
         $feedback['synchronisation_fail_message'] = eZFindElevateConfiguration::$lastSynchronizationError;
     }
 }
+// Generates the elevation.xml file and return it as a downloadable file
+else if ( $http->hasPostVariable( 'ezfind-elevate-download' ) )
+{
+	$elevateXml = eZFindElevateConfiguration::getElevateConfiguration();
+
+	header('Content-disposition: attachment; filename="elevate.xml"');
+	header('Content-type: "text/xml"; charset="utf8"');
+	echo $elevateXml;
+	eZExecution::cleanExit();
+}
+
 
 $viewParameters = array_merge( $viewParameters, array( 'offset' => ( isset( $Params['Offset'] ) and is_numeric( $Params['Offset'] ) ) ? $Params['Offset'] : 0 ) );
 $tpl->setVariable( 'view_parameters', $viewParameters );

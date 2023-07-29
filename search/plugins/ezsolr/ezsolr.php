@@ -1617,7 +1617,6 @@ class eZSolr implements ezpSearchEngine
         {
             return eZFindElevateConfiguration::synchronizeWithSolr( $this->Solr );
         }
-
     }
 
     /**
