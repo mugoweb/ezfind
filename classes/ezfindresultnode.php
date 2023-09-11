@@ -118,7 +118,7 @@ class eZFindResultNode extends eZContentObjectTreeNode
 
                     case 'url_alias':
                     {
-                        $retVal = $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( $attr ) ];
+                        $retVal = $this->LocalAttributeValueList[ 'doc' ][ eZSolr::getMetaFieldName( 'main_url_alias' ) ];
                     } break;
                 }
             }
