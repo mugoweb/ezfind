@@ -1596,29 +1596,6 @@ class eZSolr implements ezpSearchEngine
 
     }
 
-
-    /**
-     * synchronises elevate configuration across language shards in case of
-     * multiple lnguage indexes, or the default one
-     *
-     * @TODO: handle exceptions properly
-     */
-    public function pushElevateConfiguration()
-    {
-        if ( $this->UseMultiLanguageCores == true )
-        {
-            foreach ( $this->SolrLanguageShards as $shard )
-            {
-                eZFindElevateConfiguration::synchronizeWithSolr( $shard );
-            }
-            return true;
-        }
-        else
-        {
-            return eZFindElevateConfiguration::synchronizeWithSolr( $this->Solr );
-        }
-    }
-
     /**
      * Translates a solr response into result objects or a slightly modified array.
      * The $asObjects parameter controls which of the 2 return formats get send back.
