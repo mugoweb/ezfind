@@ -900,7 +900,7 @@ class eZSolr implements ezpSearchEngine
 
         // 1: remove the assciated "elevate" configuration
         eZFindElevateConfiguration::purge( '', $contentObjectId );
-        //eZFindElevateConfiguration::synchronizeWithSolr();
+
         $this->pushElevateConfiguration();
 
         // @todo Remove if accepted. Optimize is bad on runtime.

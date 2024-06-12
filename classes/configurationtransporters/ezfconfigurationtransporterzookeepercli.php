@@ -12,6 +12,8 @@ class eZFConfigurationTransporterZookeeperCli extends ezfConfigurationTransporte
 
     public function push( $configuration )
     {
-        exec($this->cli . ' set /configs/ezp_collection_config/elevate.xml ' . escapeshellarg( $configuration ) );
+        exec($this->cli . ' set /configs/ezp_collection_config/elevate.xml ' . escapeshellarg( $configuration ), $output, $exitCode );
+
+        return $exitCode === 0;
     }
 }
