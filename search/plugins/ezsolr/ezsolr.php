@@ -900,7 +900,7 @@ class eZSolr implements ezpSearchEngine
 
         // 1: remove the assciated "elevate" configuration
         eZFindElevateConfiguration::purge( '', $contentObjectId );
-        //eZFindElevateConfiguration::synchronizeWithSolr();
+
         $this->pushElevateConfiguration();
 
         // @todo Remove if accepted. Optimize is bad on runtime.
@@ -1594,29 +1594,6 @@ class eZSolr implements ezpSearchEngine
         }
 
 
-    }
-
-
-    /**
-     * synchronises elevate configuration across language shards in case of
-     * multiple lnguage indexes, or the default one
-     *
-     * @TODO: handle exceptions properly
-     */
-    public function pushElevateConfiguration()
-    {
-        if ( $this->UseMultiLanguageCores == true )
-        {
-            foreach ( $this->SolrLanguageShards as $shard )
-            {
-                eZFindElevateConfiguration::synchronizeWithSolr( $shard );
-            }
-            return true;
-        }
-        else
-        {
-            return eZFindElevateConfiguration::synchronizeWithSolr( $this->Solr );
-        }
     }
 
     /**
