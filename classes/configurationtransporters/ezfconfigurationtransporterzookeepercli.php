@@ -13,10 +13,20 @@ class eZFConfigurationTransporterZookeeperCli extends ezfConfigurationTransporte
         parent::__construct( $parameters );
     }
 
-    public function push( $configuration )
+	/**
+	 * @param string $elevateXmlString
+	 * @return bool
+	 */
+    public function push( $elevateXmlString )
     {
-        exec($this->cli . ' set '. $this->configFilePath . ' ' . escapeshellarg( $configuration ), $output, $exitCode );
+        exec($this->cli . ' set '. $this->configFilePath . ' \'' . $elevateXmlString . '\'', $output, $exitCode );
 
-        return $exitCode === 0;
+        if( $exitCode === 0 )
+        {
+            $solrBase = new eZSolrBase();
+            return $solrBase->reloadCollection();
+        }
+
+        return false;
     }
 }
