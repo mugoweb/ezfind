@@ -898,10 +898,21 @@ class eZSolr implements ezpSearchEngine
             $commit = true;
         }
 
-        // 1: remove the assciated "elevate" configuration
-        eZFindElevateConfiguration::purge( '', $contentObjectId );
+        // 1: remove the associated "elevate" configuration
+        if( eZFindElevateConfiguration::fetchConfigurationForObject(
+            $contentObjectId,
+            true,
+            null,
+            null,
+            true
+        )
+        )
+        {
+            eZFindElevateConfiguration::purge( '', $contentObjectId );
 
-        $this->pushElevateConfiguration();
+            $configurationTransporter = eZFConfigurationTransporter::factory();
+            $configurationTransporter->push( eZFindElevateConfiguration::getElevateConfiguration() );
+        }
 
         // @todo Remove if accepted. Optimize is bad on runtime.
         $optimize = false;
