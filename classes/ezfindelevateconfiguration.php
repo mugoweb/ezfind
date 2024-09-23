@@ -317,37 +317,6 @@ class eZFindElevateConfiguration extends eZPersistentObject
     }
 
     /**
-     * Synchronizes the elevate configuration stored in the DB
-     * with the one actually used by Solr.
-     *
-     * @return boolean true if the whole operation passed, false otherwise.
-     */
-    public static function synchronizeWithSolr( $shard = null )
-    {
-        if ( self::generateConfiguration() )
-        {
-            try
-            {
-                self::pushConfigurationToSolr( $shard );
-            }
-            catch ( Exception $e )
-            {
-                self::$lastSynchronizationError = $e->getMessage();
-                eZDebug::writeError( self::$lastSynchronizationError, __METHOD__ );
-                return false;
-            }
-        }
-        else
-        {
-            $message = ezpI18n::tr( 'extension/ezfind/elevate', "Error while generating the configuration XML" );
-            self::$lastSynchronizationError = $message;
-            eZDebug::writeError( $message, __METHOD__ );
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * @return string
      */
     public static function getElevateConfiguration()
@@ -440,44 +409,6 @@ class eZFindElevateConfiguration extends eZPersistentObject
     }
 
     /**
-     * Pushes the configuration XML to Solr through a custom requestHandler ( HTTP/ReST ).
-     * The requestHandler ( Solr extension ) will take care of reloading the configuration.
-     *
-     * @see $configurationXML
-     * @return void
-     */
-    protected static function pushConfigurationToSolr( $shard = null )
-    {
-        $params = array(
-            'qt' => 'ezfind',
-            self::CONF_PARAM_NAME => self::getConfiguration()
-        );
-
-        // Keep previous behaviour, but should not be needed
-        if ( $shard === null )
-        {
-            $shard = new eZSolrBase();
-        }
-
-        $result = $shard->pushElevateConfiguration( $params );
-
-        if ( ! $result )
-        {
-            $message = ezpI18n::tr( 'extension/ezfind/elevate', 'An unknown error occured in updating Solr\'s elevate configuration.' );
-            eZDebug::writeError( $message, __METHOD__ );
-            throw new Exception( $message );
-        }
-        elseif ( isset( $result['error'] ) )
-        {
-            eZDebug::writeError( $result['error'], __METHOD__ );
-        }
-        else
-        {
-            eZDebug::writeNotice( "Successful update of Solr's configuration.", __METHOD__ );
-        }
-    }
-
-    /**
      * Generates a well-formed array of elevate-related query parameters.
      *
      * @param boolean $forceElevation Whether elevation should be forced or not. Parameter supported at runtime from Solr@rev:735117
@@ -515,4 +446,4 @@ class eZFindElevateConfiguration extends eZPersistentObject
 }
 // Initialize the static property containing <eZINI> solr.ini
 eZFindElevateConfiguration::$solrINI = eZINI::instance( 'solr.ini' );
-?>
+

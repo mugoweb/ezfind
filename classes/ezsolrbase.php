@@ -415,6 +415,37 @@ class eZSolrBase
     }
 
     /**
+     * @return string
+     */
+    public function getCollectionName()
+    {
+        $parsedUrl = parse_url( $this->SearchServerURI );
+        if( isset( $parsedUrl[ 'path' ] ) )
+        {
+            $pathParts = explode( '/', $parsedUrl[ 'path' ] );
+            return $pathParts[ 2 ] ?? 'ezp-default';
+        }
+
+        return 'ezp-default';
+    }
+
+    /**
+     * @return bool
+     */
+    public function reloadCollection()
+    {
+        $collectionName = $this->getCollectionName();
+
+        if( $collectionName )
+        {
+            $response = $this->rawSolrRequest( '/admin/collections?action=RELOAD&name=' . $collectionName );
+            return $response[ 'responseHeader' ][ 'status' ] === 0;
+        }
+
+        return false;
+    }
+
+    /**
      * Proxy method to {@link self::sendHTTPRequest()}.
      * Sometimes, an overloaded Solr server can result a timeout and drop the connection
      * In this case, we will retry just after, with a max number of retries defined in solr.ini ([SolrBase].ProcessMaxRetries)

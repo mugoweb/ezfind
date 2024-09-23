@@ -189,9 +189,10 @@ else if ( $http->hasPostVariable( 'ezfind-searchelevateconfigurations-do' ) or
 // Synchronise Elevate configuration with Solr :
 else if ( $http->hasPostVariable( 'ezfind-elevate-synchronise' ) )
 {
-    $solr = new eZSolr();
-    //if ( eZFindElevateConfiguration::synchronizeWithSolr() )
-    if ( $solr->pushElevateConfiguration() )
+    $configurationTransporter = eZFConfigurationTransporter::factory();
+    $success = $configurationTransporter->push( eZFindElevateConfiguration::getElevateConfiguration() );
+
+    if ( $success )
     {
         $feedback['synchronisation_ok'] = true;
     }

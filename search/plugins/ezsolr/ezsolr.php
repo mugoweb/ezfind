@@ -898,10 +898,21 @@ class eZSolr implements ezpSearchEngine
             $commit = true;
         }
 
-        // 1: remove the assciated "elevate" configuration
-        eZFindElevateConfiguration::purge( '', $contentObjectId );
-        //eZFindElevateConfiguration::synchronizeWithSolr();
-        $this->pushElevateConfiguration();
+        // 1: remove the associated "elevate" configuration
+        if( eZFindElevateConfiguration::fetchConfigurationForObject(
+            $contentObjectId,
+            true,
+            null,
+            null,
+            true
+        )
+        )
+        {
+            eZFindElevateConfiguration::purge( '', $contentObjectId );
+
+            $configurationTransporter = eZFConfigurationTransporter::factory();
+            $configurationTransporter->push( eZFindElevateConfiguration::getElevateConfiguration() );
+        }
 
         // @todo Remove if accepted. Optimize is bad on runtime.
         $optimize = false;
@@ -1594,29 +1605,6 @@ class eZSolr implements ezpSearchEngine
         }
 
 
-    }
-
-
-    /**
-     * synchronises elevate configuration across language shards in case of
-     * multiple lnguage indexes, or the default one
-     *
-     * @TODO: handle exceptions properly
-     */
-    public function pushElevateConfiguration()
-    {
-        if ( $this->UseMultiLanguageCores == true )
-        {
-            foreach ( $this->SolrLanguageShards as $shard )
-            {
-                eZFindElevateConfiguration::synchronizeWithSolr( $shard );
-            }
-            return true;
-        }
-        else
-        {
-            return eZFindElevateConfiguration::synchronizeWithSolr( $this->Solr );
-        }
     }
 
     /**
