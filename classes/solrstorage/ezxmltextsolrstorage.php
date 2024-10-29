@@ -25,7 +25,10 @@ class ezxmltextSolrStorage extends ezdatatypeSolrStorage
         $dataTypeIdentifier = $contentObjectAttribute->attribute( 'data_type_string' );
         $attributeContents = $contentObjectAttribute->content();
         $doc = new DOMDocument( '1.0' );
-        $doc->loadXML( $attributeContents->attribute( 'xml_data' ) );
+        $xmlData = $attributeContents->attribute( 'xml_data' ) ? $attributeContents->attribute( 'xml_data' ) : null;
+        if($xmlData){
+            $doc->loadXML( $xmlData );
+        }
         $xpath = new DOMXPath( $doc );
         $content = $doc->saveXML( $xpath->query( '/*' )->item( 0 ) );
 

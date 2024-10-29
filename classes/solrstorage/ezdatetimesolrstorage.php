@@ -18,7 +18,8 @@ class ezdatetimeSolrStorage extends ezdatatypeSolrStorage
      */
     public static function getAttributeContent( eZContentObjectAttribute $contentObjectAttribute, eZContentClassAttribute $contentClassAttribute )
     {
-        $dateTime = new DateTime( '@' . $contentObjectAttribute->attribute( 'data_int' ) );
+        $timestamp = $contentObjectAttribute->attribute( 'data_int' ) ? $contentObjectAttribute->attribute( 'data_int' ) : 0;
+        $dateTime = new DateTime( '@' . $timestamp );
         return array(
             'content' => $dateTime->format( 'c' ),
             'has_rendered_content' => false,
