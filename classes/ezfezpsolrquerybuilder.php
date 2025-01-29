@@ -428,7 +428,7 @@ class ezfeZPSolrQueryBuilder
         }
 
         // Handle boost functions :
-        $boostFunctionsParamList = $this->buildBoostFunctions( $boostFunctions, $handlerParameters );
+        $boostFunctionsParamList = $this->buildBoostFunctions( $handlerParameters, $boostFunctions );
 
         // special handling of filters in the case of distributed search filters
         // incorporate distributed search filters if defined with an OR expression, and AND-ing all others
@@ -609,7 +609,7 @@ class ezfeZPSolrQueryBuilder
      *
      * @return array containing the boost expressions for the various request handler boost parameters
      */
-    protected function buildBoostFunctions( $boostFunctions = null, &$handlerParameters )
+    protected function buildBoostFunctions( &$handlerParameters, $boostFunctions = null )
     {
         if ( $boostFunctions == null )
             return array();
