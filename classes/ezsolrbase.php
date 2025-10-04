@@ -308,6 +308,8 @@ class eZSolrBase
         }
         else
         {
+            $this->addContentObjectIdToIbexaQueue( $docs[ 'eng-US' ]->Doc[ 'meta_id_si' ][ 'content' ][0] );
+
             if ( is_numeric( $commitWithin ) && $commitWithin > 0 )
             {
                 $postString = '<add commitWithin="' . $commitWithin . '">';
@@ -657,4 +659,39 @@ class eZSolrBase
         }
     }
 
+    public function addContentObjectIdToIbexaQueue( int $id ) : void
+    {
+        if( php_sapi_name() !== 'cli' ) { // Avoid endless loop with ibexa system
+            $ini = eZINI::instance('csm_base.ini');
+            $awsSettings = $ini->group('AWS');
+            $awsConfig =
+                [
+                    'credentials' =>
+                        [
+                            'key' => $awsSettings['Key'],
+                            'secret' => $awsSettings['Secret'],
+                        ],
+                    'region' => $awsSettings['Region'],
+                    'version' => 'latest',
+                ];
+
+            $sdk = new \Aws\Sdk($awsConfig);
+
+            try {
+                $queueUrl = $sdk->createSqs()->getQueueUrl(
+                    ['QueueName' => 'IndexContent']
+                )->get('QueueUrl');
+
+                $sdk->createSqs()->sendMessage(
+                    [
+                        'QueueUrl' => $queueUrl,
+                        'MessageID' => $id,
+                        'MessageBody' => $id,
+                    ]
+                );
+            } catch (\Exception $exception) {
+                eZDebug::writeError('Unable to add content object id to queue: ' . $exception->getMessage(), 'eZ Find');
+            }
+        }
+    }
 }

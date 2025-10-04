@@ -953,6 +953,7 @@ class eZSolr implements ezpSearchEngine
         }
         else
         {
+            $this->Solr->addContentObjectIdToIbexaQueue( $contentObjectId );
             return $this->Solr->deleteDocs( $docs, false, $commit, $optimize, $commitWithin );
         }
     }
