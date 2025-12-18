@@ -659,19 +659,24 @@ class eZSolrBase
         }
     }
 
+    /**
+     * This is not working for the DEV environments - they use the file system for the queue items
+     * Also, this is not working for the archive instance - the queue nane is hardcoded
+     */
     public function addContentObjectIdToIbexaQueue( int $id ) : void
     {
-        if( php_sapi_name() !== 'cli' ) { // Avoid endless loop with ibexa system
+        if( php_sapi_name() !== 'cli' ) // Avoid endless loop with ibexa system
+        {
             $ini = eZINI::instance('csm_base.ini');
             $awsSettings = $ini->group('AWS');
             $awsConfig =
                 [
                     'credentials' =>
                         [
-                            'key' => $awsSettings['Key'],
-                            'secret' => $awsSettings['Secret'],
+                            'key' => $awsSettings[ 'Key' ],
+                            'secret' => $awsSettings[ 'Secret' ],
                         ],
-                    'region' => $awsSettings['Region'],
+                    'region' => $awsSettings[ 'Region' ],
                     'version' => 'latest',
                 ];
 
