@@ -194,7 +194,10 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
 
             foreach ( $metaDataArray as $item )
             {
-                $metaData .= $item['text'] . ' ';
+                if( is_array( $item ) )
+                {
+                    $metaData .= $item['text'] . ' ';
+                }
             }
         }
         return trim( $metaData, "\t\r\n " );
