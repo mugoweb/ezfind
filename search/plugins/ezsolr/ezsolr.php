@@ -1672,7 +1672,10 @@ class eZSolr implements ezpSearchEngine
                 {
                     foreach ( $tmpNodeRowList as $nodeRow )
                     {
-                        $nodeRowList[$nodeRow['node_id']] = $nodeRow;
+                        if( is_array( $nodeRow ) )
+                        {
+                            $nodeRowList[$nodeRow['node_id']] = $nodeRow;
+                        }
                     }
                 }
                 unset( $tmpNodeRowList );
